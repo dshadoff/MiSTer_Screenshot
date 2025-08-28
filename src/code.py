@@ -6,7 +6,6 @@
 
 """CircuitPython Essentials HID Keyboard example"""
 import time
-
 import board
 import digitalio
 import usb_hid
@@ -17,12 +16,11 @@ from adafruit_hid.keycode import Keycode
 # A simple neat keyboard demo in CircuitPython
 
 # The pins we'll use, each will have an internal pullup
-keypress_pins = [board.TIP]
-# Our array of key objects
+keys_pressed = [1, 2]
+keypress_pins = [board.TIP,board.RING_1]
+
+# Our array of built key objects
 key_pin_array = []
-# The Keycode sent for each button, will be paired with a control key
-keys_pressed = [Keycode.PRINT_SCREEN]
-control_key = Keycode.GUI
 
 # The keyboard object!
 time.sleep(1)  # Sleep for a bit to avoid a race condition on some systems
@@ -34,43 +32,28 @@ ground_pin = digitalio.DigitalInOut(board.SLEEVE)
 ground_pin.direction = digitalio.Direction.OUTPUT
 ground_pin.value = False
 
-
 # Make all other pin objects inputs with pullups
 for pin in keypress_pins:
     key_pin = digitalio.DigitalInOut(pin)
     key_pin.direction = digitalio.Direction.INPUT
     key_pin.pull = digitalio.Pull.UP
-    key_pin_array.append(key_pin)
-
-# For most CircuitPython boards:
-###led = digitalio.DigitalInOut(board.LED)
-# For QT Py M0:
-# led = digitalio.DigitalInOut(board.SCK)
-###led.direction = digitalio.Direction.OUTPUT
-
-#print("Waiting for key pin...")
+    key_pin_array.append(key_pin)   # Add to array of key objects
 
 while True:
-    # Check each pin
     for key_pin in key_pin_array:
         if not key_pin.value:  # Is it grounded?
             i = key_pin_array.index(key_pin)
 #            print("Pin #%d is grounded." % i)
-
-            # Turn on the red LED
-#            led.value = True
-
             while not key_pin.value:
                 pass  # Wait for it to be ungrounded!
-            # "Type" the Keycode or string
-            key = keys_pressed[i]  # Get the corresponding Keycode or string
-            if isinstance(key, str):  # If it's a string...
-                keyboard_layout.write(key)  # ...Print the string
-            else:  # If it's not a string...
-                keyboard.press(control_key, key)  # "Press"...
+            key = keys_pressed[i]  # Get the corresponding Key
+
+            if key == 1:   # Tip, or "B" on 8BitDo buttons
+                keyboard.press(Keycode.GUI, Keycode.SHIFT, Keycode.PRINT_SCREEN)  # "Press"...
                 keyboard.release_all()  # ..."Release"!
 
-            # Turn off the red LED
-#            led.value = False
+            if key == 2:   # Ring_1, or "A" on 8BitDo buttons
+                keyboard.press(Keycode.GUI, Keycode.PRINT_SCREEN)  # "Press"...
+                keyboard.release_all()  # ..."Release"!
 
     time.sleep(0.01)
