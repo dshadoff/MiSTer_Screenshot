@@ -7,7 +7,7 @@ I use a Logitech K400+ keyboard/trackpad combo on my MiSTer, but it has one weak
 PrintScreen key is a key-combination of Windows + PrtScr, but the LogiTech's keyboard
 uses another key combination for the PrtScr key, which I can never seem to remember.
 
-So, this device is effectively a 1-key macropad with one use: screen capture
+So, this device is effectively a 2-key macropad with one use: screen capture
 
 
 ## CircuitBoard / Parts List
